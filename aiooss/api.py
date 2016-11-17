@@ -293,7 +293,7 @@ class Bucket(_Base):
                                         'encoding-type': 'url'})
         return self._parse_result(resp, xml_utils.parse_list_objects, ListObjectsResult)
 
-    def put_object(self, key, data,
+    async def put_object(self, key, data,
                    headers=None,
                    progress_callback=None):
         """上传一个普通文件。
@@ -317,11 +317,12 @@ class Bucket(_Base):
         """
         headers = utils.set_content_type(http.CaseInsensitiveDict(headers), key)
 
-        if progress_callback:
-            data = utils.make_progress_adapter(data, progress_callback)
+        # if progress_callback:
+        #     data = utils.make_progress_adapter(data, progress_callback)
 
-        resp = self.__do_object('PUT', key, data=data, headers=headers)
-        return PutObjectResult(resp)
+        resp = await self.__do_object('PUT', key, data=data, headers=headers)
+        # return PutObjectResult(resp)
+        return resp
 
     def put_object_from_file(self, key, filename,
                              headers=None,

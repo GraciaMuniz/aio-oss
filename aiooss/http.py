@@ -111,8 +111,8 @@ def _convert_request_body(data):
     if hasattr(data, '__len__'):
         return data
 
-    if hasattr(data, 'seek') and hasattr(data, 'tell'):
-        return SizedFileAdapter(data, file_object_remaining_bytes(data))
+    # if hasattr(data, 'seek') and hasattr(data, 'tell'):
+    #     return SizedFileAdapter(data, file_object_remaining_bytes(data))
 
     return data
 
