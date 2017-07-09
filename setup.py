@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aiooss',
-    version='0.1',
+    version='0.2',
     description='Asyncio-based client for Aliyun OSS',
     author='Rocky Feng',
     author_email='folowing@gmail.com',
