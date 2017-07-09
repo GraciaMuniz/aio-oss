@@ -27,11 +27,13 @@ _USER_AGENT = 'aliyun-sdk-python/{0}({1}/{2}/{3};{4})'.format(
 class Session(object):
     """属于同一个Session的请求共享一组连接池，如有可能也会重用HTTP连接。"""
     def __init__(self):
-
-        self.session = aiohttp.ClientSession()
+        self.session = None
 
     async def do_request(self, req, timeout):
         try:
+            if not self.session:
+                self.session = aiohttp.ClientSession()
+
             with aiohttp.Timeout(timeout):
                 resp = await self.session.request(req.method, req.url,
                                                   data=req.data,
@@ -43,7 +45,8 @@ class Session(object):
             raise RequestError(e)
 
     def close(self):
-        self.session.close()
+        if self.session:
+            self.session.close()
 
 
 class Request(object):
