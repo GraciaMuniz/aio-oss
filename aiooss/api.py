@@ -476,7 +476,7 @@ class Bucket(_Base):
         else:
             raise exceptions.ClientError('Client time varies too much from server?')  # pragma: no cover
 
-    def copy_object(self, source_key, target_key, headers=None, source_bucket_name=None):
+    async def copy_object(self, source_key, target_key, headers=None, source_bucket_name=None):
         """拷贝一个文件到当前Bucket。
 
         :param str source_bucket_name: 源Bucket名
