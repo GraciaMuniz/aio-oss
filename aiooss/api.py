@@ -476,7 +476,7 @@ class Bucket(_Base):
         else:
             raise exceptions.ClientError('Client time varies too much from server?')  # pragma: no cover
 
-    def copy_object(self, source_bucket_name, source_key, target_key, headers=None):
+    def copy_object(self, source_key, target_key, headers=None, source_bucket_name=None):
         """拷贝一个文件到当前Bucket。
 
         :param str source_bucket_name: 源Bucket名
@@ -488,10 +488,12 @@ class Bucket(_Base):
 
         :return: :class:`PutObjectResult <oss2.models.PutObjectResult>`
         """
+        if not source_bucket_name:
+            source_bucket_name = self.bucket_name
         headers = http.CaseInsensitiveDict(headers)
         headers['x-oss-copy-source'] = '/' + source_bucket_name + '/' + source_key
 
-        resp = self.__do_object('PUT', target_key, headers=headers)
+        resp = await self.__do_object('PUT', target_key, headers=headers)
 
         # return PutObjectResult(resp)
         return resp
@@ -508,7 +510,7 @@ class Bucket(_Base):
 
         :return: :class:`RequestResult <oss2.models.RequestResults>`
         """
-        return self.copy_object(self.bucket_name, key, key, headers=headers)
+        return self.copy_object(key, key, headers=headers)
 
     def delete_object(self, key):
         """删除一个文件。
