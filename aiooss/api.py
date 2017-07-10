@@ -493,7 +493,8 @@ class Bucket(_Base):
 
         resp = self.__do_object('PUT', target_key, headers=headers)
 
-        return PutObjectResult(resp)
+        # return PutObjectResult(resp)
+        return resp
 
     def update_object_meta(self, key, headers):
         """更改Object的元数据信息，包括Content-Type这类标准的HTTP头部，以及以x-oss-meta-开头的自定义元数据。
