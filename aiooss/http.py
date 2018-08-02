@@ -33,12 +33,12 @@ class Session(object):
 
     async def do_request(self, req, timeout):
         try:
-            with aiohttp.Timeout(timeout):
-                resp = await self.session.request(req.method, req.url,
-                                                  data=req.data,
-                                                  params=req.params,
-                                                  headers=req.headers,
-                                                  )
+            resp = await self.session.request(req.method, req.url,
+                                              data=req.data,
+                                              params=req.params,
+                                              headers=req.headers,
+                                              timeout=timeout,
+                                              )
             return Response(resp)
         except Exception as e:
             raise RequestError(e)
