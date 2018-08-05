@@ -28,23 +28,29 @@ class Session(object):
     """属于同一个Session的请求共享一组连接池，如有可能也会重用HTTP连接。"""
     def __init__(self):
         conn = aiohttp.TCPConnector(limit=1024)
-        self.session = aiohttp.ClientSession(connector=conn,
-                                             skip_auto_headers={'Content-Type'})
+        self._session = aiohttp.ClientSession(
+            connector=conn,
+            skip_auto_headers={'Content-Type'},
+        )
 
     async def do_request(self, req, timeout):
         try:
-            resp = await self.session.request(req.method, req.url,
-                                              data=req.data,
-                                              params=req.params,
-                                              headers=req.headers,
-                                              timeout=timeout,
-                                              )
+            resp = await self._session.request(req.method, req.url,
+                                               data=req.data,
+                                               params=req.params,
+                                               headers=req.headers,
+                                               timeout=timeout,
+                                               )
             return Response(resp)
         except Exception as e:
             raise RequestError(e)
 
-    def close(self):
-        self.session.close()
+    def __del__(self):
+        if not self._session.closed:
+            if self._session._connector is not None \
+                    and self._session._connector_owner:
+                self._session._connector.close()
+            self._session._connector = None
 
 
 class Request(object):

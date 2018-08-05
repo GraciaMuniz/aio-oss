@@ -153,9 +153,6 @@ class _Base(object):
         parse_func(result, resp.read())
         return result
 
-    def clean(self):
-        self.session.close()
-
 
 class Service(_Base):
     """用于Service操作的类，如罗列用户所有的Bucket。
