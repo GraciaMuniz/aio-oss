@@ -43,6 +43,8 @@ class OssError(Exception):
         #: OSS错误信息
         self.message = self.details.get('Message', '')
 
+        self.headers = headers
+
     def __str__(self):
         error = {'status': self.status,
                  'details': self.details}
