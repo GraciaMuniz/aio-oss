@@ -18,7 +18,6 @@ from .exceptions import RequestError
 from .utils import file_object_remaining_bytes, SizedFileAdapter
 from .structures import CaseInsensitiveDict
 
-
 _USER_AGENT = 'aliyun-sdk-python/{0}({1}/{2}/{3};{4})'.format(
     __version__, platform.system(), platform.release(), platform.machine(),
     platform.python_version())
@@ -26,6 +25,7 @@ _USER_AGENT = 'aliyun-sdk-python/{0}({1}/{2}/{3};{4})'.format(
 
 class Session(object):
     """属于同一个Session的请求共享一组连接池，如有可能也会重用HTTP连接。"""
+
     def __init__(self):
         conn = aiohttp.TCPConnector(limit=1024)
         self._session = aiohttp.ClientSession(
@@ -44,13 +44,6 @@ class Session(object):
             return Response(resp)
         except Exception as e:
             raise RequestError(e)
-
-    def __del__(self):
-        if not self._session.closed:
-            if self._session._connector is not None \
-                    and self._session._connector_owner:
-                self._session._connector.close()
-            self._session._connector = None
 
 
 class Request(object):
@@ -122,5 +115,3 @@ def _convert_request_body(data):
     #     return SizedFileAdapter(data, file_object_remaining_bytes(data))
 
     return data
-
-
